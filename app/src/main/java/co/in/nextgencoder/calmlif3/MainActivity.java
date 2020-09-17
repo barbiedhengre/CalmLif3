@@ -1,8 +1,8 @@
-package com.example.calmlif3;
-
-import androidx.appcompat.app.AppCompatActivity;
+package co.in.nextgencoder.calmlif3;
 
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

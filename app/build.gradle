@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "co.in.nextgencoder.calmlif3"
+        applicationId "co.in.nextgencoder"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

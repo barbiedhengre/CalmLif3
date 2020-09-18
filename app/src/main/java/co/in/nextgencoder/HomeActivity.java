@@ -10,6 +10,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import co.in.nextgencoder.calmlif3.R;
+
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override

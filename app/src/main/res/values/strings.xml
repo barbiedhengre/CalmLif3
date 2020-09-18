@@ -7,4 +7,8 @@
     <string name="go_to_register">New user? Register Now</string>
     <string name="go_to_login">Already a user? Login here</string>
     <string name="register">Register</string>
+    <string name="title_activity_home">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

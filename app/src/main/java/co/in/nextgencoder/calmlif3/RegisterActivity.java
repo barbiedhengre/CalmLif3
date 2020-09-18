@@ -63,7 +63,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerUser(View view) {
-
         boolean isFormValid = false;
         String alertToGive = "";
 
@@ -74,15 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
         final String userMail = mailInput.getText().toString().trim();
         final String userPass = passwordInput.getText().toString().trim();
 
-
         if( userName.isEmpty() || userMail.isEmpty() || userPass.isEmpty()) {
             alertToGive = "All fields are manadatory";
         } else {
-            if ( userName.trim().matches(nameValidationRegex)) {
-                if (userMail.trim().matches(emailValidationRegex)) {
-                    alertToGive = "Valid email address";
-
-                    if (userPass.trim().length() < 8) {
+            if ( userName.matches(nameValidationRegex)) {
+                if (userMail.matches(emailValidationRegex)) {
+                    if (userPass.length() < 8) {
                         alertToGive = "Password length should be greater than or equal to 8";
                     } else {
                         isFormValid = true;
@@ -102,10 +98,10 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete( Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-
                                 databaseReference.child( firebaseAuth.getCurrentUser().getUid()).child("name").setValue(userName);
                                 databaseReference.child( firebaseAuth.getCurrentUser().getUid()).child("mail").setValue(userMail);
+
+                                Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent( getApplicationContext(), MainActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -67,8 +67,6 @@ public class LoginActivity extends AppCompatActivity {
             alertToGive = "All fields are manadatory";
         } else {
             if ( mailInput.getText().toString().trim().matches(emailValidationRegex)) {
-                alertToGive = "Valid email address";
-
                 if( passwordInput.getText().toString().trim().length() < 8) {
                     alertToGive = "Password length should be greater than or equal to 8";
                 } else {
@@ -129,8 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
-                final String userName = account.getEmail();
-                final String userMail = account.getDisplayName();
+                final String userMail = account.getEmail();
+                final String userName = account.getDisplayName();
                 final String userId = account.getId();
 
                 firebaseAuth.signInWithCredential(credential)

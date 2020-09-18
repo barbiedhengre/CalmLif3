@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +30,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import co.in.nextgencoder.HomeActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
-    TextView nameShow, emailShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-
-        nameShow = findViewById( R.id.nameShow);
-        emailShow = findViewById( R.id.emailShow);
     }
 
     @Override
@@ -64,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
                     ValueEventListener postListener = new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            emailShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("mail").getValue().toString());
-                            nameShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("name").getValue().toString());
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         }
 
                         @Override
@@ -84,12 +84,13 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             // When user is signed in by google signIn
-            nameShow.setText("Name : "+account.getDisplayName());
-            emailShow.setText("Account : "+account.getEmail());
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
-    public void signIn(View view) {
-
+    public void signWithGoogle(View view) {
+        // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
     }
 }

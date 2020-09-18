@@ -51,41 +51,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        try {
-            final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        // Checking last google sign in
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-            if (firebaseUser == null) {
-                finish();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
+        // Check for existing Google Sign In account, if the user is already signed in
+        if( account == null) {
+            // When user is not signed in by google signIn
+            try {
+                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                if ( firebaseUser != null && firebaseUser.getUid() != null) {
+                    ValueEventListener postListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            emailShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("mail").getValue().toString());
+                            nameShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("name").getValue().toString());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    };
+                    databaseReference.addValueEventListener(postListener);
+                } else {
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            if (firebaseUser.getUid() != null) {
-
-                nameShow.setText("Name : "+firebaseUser.getUid());
-                emailShow.setText("Email : "+firebaseUser.getEmail());
-
-
-
-                ValueEventListener postListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        emailShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("mail").getValue().toString());
-                        nameShow.setText(dataSnapshot.child(firebaseUser.getUid()).child("name").getValue().toString());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                };
-                databaseReference.addValueEventListener(postListener);
-            }
+        } else {
+            // When user is signed in by google signIn
+            nameShow.setText("Name : "+account.getDisplayName());
+            emailShow.setText("Account : "+account.getEmail());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void signIn(View view) {

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="co.in.nextgencoder.HomeActivity"
+            android:name=".HomeActivity"
             android:label="@string/title_activity_home"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />

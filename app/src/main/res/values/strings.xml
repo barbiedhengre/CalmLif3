@@ -16,4 +16,8 @@
     <string name="title_add">Add</string>
     <string name="title_search">Search</string>
     <string name="title_feed">Feed</string>
+    <string name="profile_image">Loading Image</string>
+    <string name="title_add_heading">Add Moment</string>
+    <string name="save_moment">Save Moment</string>
+    <string name="enter_title_of_moment">Enter title of moment</string>
 </resources>

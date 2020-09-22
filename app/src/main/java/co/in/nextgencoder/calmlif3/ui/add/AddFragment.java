@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
+
 import co.in.nextgencoder.calmlif3.R;
 
 public class AddFragment extends Fragment {
@@ -23,11 +25,11 @@ public class AddFragment extends Fragment {
         addViewModel =
                 ViewModelProviders.of(this).get(AddViewModel.class);
         View root = inflater.inflate(R.layout.fragment_add, container, false);
-        final TextView textView = root.findViewById(R.id.text_add);
+        //final TextView textView = root.findViewById(R.id.text_add);
         addViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                //textView.setText(s);
             }
         });
         return root;

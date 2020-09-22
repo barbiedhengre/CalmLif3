@@ -25,6 +25,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import co.in.nextgencoder.calmlif3.model.User;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 4219;
@@ -127,8 +129,8 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
-                final String userMail = account.getEmail();
                 final String userName = account.getDisplayName();
+                final String userMail = account.getEmail();
                 final String userId = account.getId();
 
                 firebaseAuth.signInWithCredential(credential)
@@ -136,8 +138,8 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    databaseReference.child( userId).child("name").setValue(userName);
-                                    databaseReference.child( userId).child("mail").setValue(userMail);
+                                    User user = new User( userName, userMail, true);
+                                    databaseReference.child( userId).setValue(user);
 
                                     Toast.makeText(LoginActivity.this, "Login Successfull", Toast.LENGTH_SHORT).show();
 

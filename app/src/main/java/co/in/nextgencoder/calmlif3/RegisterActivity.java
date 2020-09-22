@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+import co.in.nextgencoder.calmlif3.model.User;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 4219;
@@ -98,8 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete( Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                databaseReference.child( firebaseAuth.getCurrentUser().getUid()).child("name").setValue(userName);
-                                databaseReference.child( firebaseAuth.getCurrentUser().getUid()).child("mail").setValue(userMail);
+                                User user = new User( userName, userMail);
+                                databaseReference.child( firebaseAuth.getCurrentUser().getUid()).setValue(user);
 
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
@@ -142,8 +144,8 @@ public class RegisterActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
-                final String userName = account.getEmail();
-                final String userMail = account.getDisplayName();
+                final String userName = account.getDisplayName();
+                final String userMail = account.getEmail();
                 final String userId = account.getId();
 
                 firebaseAuth.signInWithCredential(credential)
@@ -151,8 +153,8 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    databaseReference.child( userId).child("name").setValue(userName);
-                                    databaseReference.child( userId).child("mail").setValue(userMail);
+                                    User user = new User( userName, userMail, true);
+                                    databaseReference.child( userId).setValue(user);
 
                                     Toast.makeText(RegisterActivity.this, "Login Successfull", Toast.LENGTH_SHORT).show();
 

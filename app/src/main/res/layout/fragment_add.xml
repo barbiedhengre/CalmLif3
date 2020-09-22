@@ -1,22 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.add.AddFragment">
 
-    <TextView
-        android:id="@+id/text_add"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:text="@string/title_add_heading" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageHappy"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="5dp"
+                android:onClick="happyClicked"
+                android:src="@drawable/icon_happy"
+                tools:ignore="OnClick" />
+
+            <ImageView
+                android:id="@+id/imageCrazy"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="5dp"
+                android:onClick="crazyClicked"
+                android:src="@drawable/icon_crazy1"
+                tools:ignore="OnClick" />
+
+            <ImageView
+                android:id="@+id/imageKiss"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="5dp"
+                android:onClick="romanticClicked"
+                android:src="@drawable/icon_kiss"
+                tools:ignore="OnClick" />
+
+            <ImageView
+                android:id="@+id/imageSad"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="5dp"
+                android:onClick="sadClicked"
+                android:src="@drawable/icon_sad"
+                tools:ignore="OnClick" />
+
+            <ImageView
+                android:id="@+id/imageAngry"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="5dp"
+                android:onClick="angryClicked"
+                android:src="@drawable/icon_angry"
+                tools:ignore="OnClick" />
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/momentTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/enter_title_of_moment" />
+
+        <EditText
+            android:id="@+id/momentText"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:ems="10"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@color/colorPrimary"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="#fff"
+            android:onClick="saveMoment"
+            android:text="@string/save_moment"
+            tools:ignore="OnClick" />
+
+    </LinearLayout>
+
+</ScrollView>

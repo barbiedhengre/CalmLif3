@@ -73,8 +73,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-    public void signWithGoogle(View view) {
-        // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-    }
 }

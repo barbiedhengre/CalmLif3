@@ -92,25 +92,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                if( item.getItemId() == R.id.navigation_feed) {
-//                    momentService.allMoment(new CallBack<List<Moment>>() {
-//                        @Override
-//                        public void callback(List<Moment> moments) {
-//                            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
-//                            MomentAdapter adapter = new MomentAdapter( moments);
-//                            recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-//                            recyclerView.setAdapter(adapter);
-//                        }
-//                    });
-//                }
-//
-//                return true;
-//            }
-//        });
-
         textView = findViewById( R.id.logout);
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();

@@ -2,6 +2,7 @@ package co.in.nextgencoder.calmlif3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,8 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -55,12 +58,13 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     Moment moment = new Moment();
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -70,9 +74,52 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                if(destination.getId() == R.id.navigation_feed) {
+                    momentService.allMoment(new CallBack<List<Moment>>() {
+                        @Override
+                        public void callback(List<Moment> moments) {
+                            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
+                            FeedAdapter adapter = new FeedAdapter( moments);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                            recyclerView.setAdapter(adapter);
+                        }
+                    });
+                }
+
+            }
+        });
+
+//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                if( item.getItemId() == R.id.navigation_feed) {
+//                    momentService.allMoment(new CallBack<List<Moment>>() {
+//                        @Override
+//                        public void callback(List<Moment> moments) {
+//                            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
+//                            MomentAdapter adapter = new MomentAdapter( moments);
+//                            recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+//                            recyclerView.setAdapter(adapter);
+//                        }
+//                    });
+//                }
+//
+//                return true;
+//            }
+//        });
+
         textView = findViewById( R.id.logout);
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     public void saveMoment(View view) {

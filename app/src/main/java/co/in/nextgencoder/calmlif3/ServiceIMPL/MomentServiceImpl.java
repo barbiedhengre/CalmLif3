@@ -51,8 +51,23 @@ public class MomentServiceImpl implements MomentService {
     }
 
     @Override
-    public void allMoment(@NonNull CallBack<List<Moment>> finishedCallback) {
+    public void allMoment(@NonNull final CallBack<List<Moment>> finishedCallback) {
+        databaseReference.child("moments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Moment> searchedData = new ArrayList<Moment>();
+                for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Moment moment = dataSnapshot.getValue( Moment.class);
+                    searchedData.add(moment);
+                }
+                finishedCallback.callback( searchedData);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

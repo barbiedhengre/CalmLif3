@@ -1,7 +1,7 @@
 package co.in.nextgencoder.calmlif3.model;
 
 public class User {
-
+    private String id;
     private String name;
     private String mail;
     private String picture;
@@ -23,6 +23,20 @@ public class User {
         this.name = name;
         this.mail = mail;
         this.isVerified = isVerified;
+    }
+
+    public User( String id, boolean isVerified, String name) {
+        this.id = id;
+        this.isVerified = isVerified;
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -17,8 +18,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,14 +30,27 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import co.in.nextgencoder.calmlif3.R;
+import java.util.ArrayList;
+import java.util.List;
+
+import co.in.nextgencoder.calmlif3.Service.MomentService;
+import co.in.nextgencoder.calmlif3.Service.UserService;
+import co.in.nextgencoder.calmlif3.ServiceIMPL.MomentServiceImpl;
+import co.in.nextgencoder.calmlif3.ServiceIMPL.UserServiceImpl;
 import co.in.nextgencoder.calmlif3.model.Moment;
 import co.in.nextgencoder.calmlif3.model.User;
+import co.in.nextgencoder.calmlif3.utils.CallBack;
 
 
 public class HomeActivity extends AppCompatActivity {
 
+    private MomentService momentService = new MomentServiceImpl();
+    private UserService userService = new UserServiceImpl();
+
+    ToggleButton toggleButton;
     TextView textView;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
@@ -72,24 +89,80 @@ public class HomeActivity extends AppCompatActivity {
         User user = new User( googleSignInAccount.getDisplayName(), googleSignInAccount.getEmail());
         moment.setUser( user);
 
-        databaseReference.child("moments").child( googleSignInAccount.getId()).push().setValue( moment)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if( task.isSuccessful()) {
-                            Toast.makeText(HomeActivity.this, "Moment Saved", Toast.LENGTH_SHORT).show();
-                            momentDesc.setText("");
-                            momentTitle.setText("");
-                        } else {
-                            Toast.makeText(HomeActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        momentService.addMoment(new CallBack<Boolean>() {
+            @Override
+            public void callback(Boolean isSuccessful) {
+                if( isSuccessful) {
+                    Toast.makeText(HomeActivity.this, "Moment Saved", Toast.LENGTH_SHORT).show();
+                    momentDesc.setText("");
+                    momentTitle.setText("");
+                } else {
+                    Toast.makeText(HomeActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, moment);
     }
 
+    public void search( View view) {
+        final EditText searchText = findViewById( R.id.searchText);
+        String filter = "user";
+
+        /*
+         *  Getting entity criteria for Toggle
+         */
+        try {
+            if(toggleButton.getText().toString().equalsIgnoreCase( "Moment" )) {
+                filter = "moment";
+            } else {
+                filter = "user";
+            }
+        } catch ( Exception e) { }
+
+
+        /*
+        *  Filters users based on name of the users
+        */
+        if( filter.equalsIgnoreCase("user")) {
+            String searchingUser = searchText.getText().toString().trim();
+            userService.searchUserByName(new CallBack<List<User>>() {
+                @Override
+                public void callback(List<User> searchedData) {
+                    if ( searchedData != null && !searchedData.isEmpty()) {
+                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.searchList);
+                        UserAdapter adapter = new UserAdapter(searchedData);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(HomeActivity.this, "No result found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, searchingUser);
+        }
+
+        /*
+         *  Filters moments based on title of the moments
+         */
+        if( filter.equalsIgnoreCase("moment")) {
+            momentService.searchMomentByTitle(new CallBack<List<Moment>>() {
+                @Override
+                public void callback(List<Moment> searchedData) {
+                    if ( searchedData != null && !searchedData.isEmpty()) {
+                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.searchList);
+                        MomentAdapter adapter = new MomentAdapter(searchedData);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(HomeActivity.this, "No result found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, searchText.getText().toString().trim());
+        }
+    }
 
     public void toggleSearch( View view) {
-        ToggleButton toggleButton = (ToggleButton) view;
+        toggleButton = (ToggleButton) view;
         EditText searchText = findViewById( R.id.searchText);
 
         if(toggleButton.getText().toString().equalsIgnoreCase( "Moment" )) {

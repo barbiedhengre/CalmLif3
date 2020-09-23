@@ -44,10 +44,30 @@
             android:layout_margin="10dp"/>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="search"
+            android:layout_marginBottom="20dp"
             android:text="Search" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/searchList">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/searchMomentList">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>

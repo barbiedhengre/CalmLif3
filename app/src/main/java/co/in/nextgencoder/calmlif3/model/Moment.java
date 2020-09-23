@@ -1,7 +1,7 @@
 package co.in.nextgencoder.calmlif3.model;
 
 public class Moment {
-    Long id;
+    String id;
     String title;
     String mood;
     String momentDescription;
@@ -17,11 +17,18 @@ public class Moment {
         this.user = user;
     }
 
-    public Long getId() {
+    public Moment( String id, String title, String mood, String momentDescription) {
+        this.title = title;
+        this.mood = mood;
+        this.momentDescription = momentDescription;
+        this.user = user;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

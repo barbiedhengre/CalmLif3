@@ -184,7 +184,7 @@ public class ProfileFragment extends Fragment {
                     else
                         Toast.makeText( getContext(), "Bio updation failed", Toast.LENGTH_SHORT).show();
                 }
-            }, account.getId(), newBio);
+            }, id, newBio);
         }
         bioEdit.setVisibility( View.VISIBLE);
         bioSubmit.setVisibility( View.GONE);

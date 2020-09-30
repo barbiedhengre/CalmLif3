@@ -25,7 +25,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import co.in.nextgencoder.calmlif3.Service.UserService;
+import co.in.nextgencoder.calmlif3.ServiceIMPL.UserServiceImpl;
 import co.in.nextgencoder.calmlif3.model.User;
+import co.in.nextgencoder.calmlif3.utils.CallBack;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
 
     GoogleSignInClient googleSignInClient;
+
+    UserService userService = new UserServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,21 +136,23 @@ public class LoginActivity extends AppCompatActivity {
 
                 final String userName = account.getDisplayName();
                 final String userMail = account.getEmail();
-                final String userId = account.getId();
 
                 firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    User user = new User( userName, userMail, true);
-                                    databaseReference.child( userId).setValue(user);
+                                    User user = new User( userName, userMail);
+                                    userService.addUser(new CallBack<Boolean>() {
+                                        @Override
+                                        public void callback(Boolean isUserRegistered) {
+                                            Toast.makeText(LoginActivity.this, "SignIn Successfull", Toast.LENGTH_SHORT).show();
 
-                                    Toast.makeText(LoginActivity.this, "Login Successfull", Toast.LENGTH_SHORT).show();
-
-                                    Intent intent = new Intent( getApplicationContext(), MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                                            Intent intent = new Intent( getApplicationContext(), MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        }
+                                    }, user);
                                 } else {
                                     Toast.makeText(LoginActivity.this,"Sign In Failed", Toast.LENGTH_SHORT).show();
                                 }

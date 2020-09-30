@@ -89,8 +89,6 @@ public class HomeActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = storage.getReference();
 
-        moment.setPublic( true);
-
         boolean isGoogleSignIn = false;
 
         if( googleSignInAccount != null) {
@@ -231,6 +229,10 @@ public class HomeActivity extends AppCompatActivity {
         String momentDescription = momentDesc.getText().toString();
         String momentHeading = momentTitle.getText().toString();
 
+        Switch aSwitch = (Switch) view;
+        boolean isPublic = !aSwitch.isChecked();
+        moment.setPublic( isPublic);
+
         moment.setTitle( momentHeading);
         moment.setMomentDescription( momentDescription);
 
@@ -253,7 +255,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }, moment);
             }
-        }, googleSignInAccount.getId());
+        }, firebaseAuth.getUid());
     }
 
     public void search( View view) {

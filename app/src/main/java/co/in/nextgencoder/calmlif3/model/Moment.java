@@ -1,12 +1,13 @@
 package co.in.nextgencoder.calmlif3.model;
 
 public class Moment {
-    String id;
-    String title;
-    String mood;
-    String momentDescription;
-    String imageUrl;
-    User user;
+    private String id;
+    private String title;
+    private String mood;
+    private String momentDescription;
+    private String imageUrl;
+    private boolean isPublic;
+    private User user;
 
     public Moment() { }
 
@@ -62,6 +63,14 @@ public class Moment {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public User getUser() {

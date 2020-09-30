@@ -3,6 +3,7 @@ package co.in.nextgencoder.calmlif3;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         final User User = user.get(position);
         holder.listName.setText(user.get(position).getName());
-        holder.listVerified.setText(  (user.get(position).isVerified()) ? "Verified user" : "Not Verified User");
+
+        if( user.get(position).getPicture() == null || user.get(position).getPicture().isEmpty()) {
+            holder.userPic
+                    .setBackgroundResource( R.drawable.icon_user_anonymous);
+        }
+
+        holder.bio.setText(
+                ( user.get(position).getBio() == null || user.get(position).getBio().isEmpty()) ?
+                "Hello I am new on Calm Lif3" : user.get(position).getBio());
+
+//        holder.gender.setText(
+//                ( user.get(position).getGender() == null || user.get(position).getGender().isEmpty()) ?
+//                        "Not disclosed" : user.get(position).getGender());
+
+//        holder.listVerified.setText(
+//                (user.get(position).isVerified()) ? "Verified user" : "Not Verified User");
+
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,12 +68,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView listName;
-        public TextView listVerified;
+        public ImageView userPic;
+        // public TextView gender;
+        public TextView bio;
+        //public TextView listVerified;
         public RelativeLayout relativeLayout;
         public ViewHolder(View itemView) {
             super(itemView);
             this.listName = (TextView) itemView.findViewById(R.id.listName);
-            this.listVerified = (TextView) itemView.findViewById(R.id.listVerified);
+            this.bio = (TextView) itemView.findViewById(R.id.userBio);
+            this.userPic = (ImageView) itemView.findViewById(R.id.userSearchPic);
             relativeLayout = (RelativeLayout)itemView.findViewById(R.id.relativeLayout);
         }
     }

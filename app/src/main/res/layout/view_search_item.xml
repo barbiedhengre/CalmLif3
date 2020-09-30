@@ -1,25 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
+    android:background="@drawable/feed_border"
+    android:gravity="center_vertical"
+    android:layout_margin="5dp"
     android:layout_height="?android:attr/listPreferredItemHeightLarge">
 
-    <TextView
-        android:id="@+id/listVerified"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+
+    <ImageView
+        android:id="@+id/userSearchPic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        />
+        android:layout_margin="2dp" />
 
     <TextView
         android:id="@+id/listName"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@id/listVerified"
-        android:layout_toRightOf="@id/listVerified"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/userSearchPic"
         android:gravity="center_vertical"
-        android:textSize="16sp"/>
+        android:textStyle="bold"
+        android:layout_margin="2dp"
+        android:text="Rajat Patil"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/userBio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:textSize="10dp"
+        android:layout_below="@+id/listName"
+        android:layout_toRightOf="@id/userSearchPic"
+        android:text="Lorem Ipsum" />
 
 </RelativeLayout>

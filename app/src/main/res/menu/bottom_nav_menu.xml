@@ -17,9 +17,9 @@
         android:title="@string/title_add" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/icon_notifications"
-        android:title="@string/title_notification" />
+        android:id="@+id/navigation_my_moments"
+        android:icon="@drawable/icon_my_moments"
+        android:title="@string/title_my_moments" />
 
     <item
         android:id="@+id/navigation_profile"

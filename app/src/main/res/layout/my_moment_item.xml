@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/momentListLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/myMomentLayout"
     android:layout_width="match_parent"
     android:background="@drawable/feed_border"
     android:layout_marginHorizontal="10dp"
     android:layout_marginBottom="5dp"
     android:gravity="center_vertical"
-    android:layout_height="80dp">
+    android:layout_height="60dp">
 
     <ImageView
         android:id="@+id/searchedMoodIcon"
         android:layout_width="60dp"
         android:layout_marginLeft="3dp"
-        android:layout_height="60dp" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/searchedMomentTitle"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="I am sad"
         android:layout_toRightOf="@id/searchedMoodIcon"
+        android:layout_toLeftOf="@id/deleteMoment"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:textStyle="bold"
@@ -35,5 +38,13 @@
         android:layout_marginTop="0dp"
         android:layout_marginRight="3dp"
         android:text="description" />
+
+    <ImageView
+        android:id="@+id/deleteMoment"
+        android:layout_width="30dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/icon_delete_my_moments" />
 
 </RelativeLayout>

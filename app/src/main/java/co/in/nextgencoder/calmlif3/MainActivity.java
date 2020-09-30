@@ -3,6 +3,7 @@ package co.in.nextgencoder.calmlif3;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,40 +38,31 @@ public class MainActivity extends AppCompatActivity {
         // Checking last google sign in
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        // Check for existing Google Sign In account, if the user is already signed in
-        if( account == null) {
-            // When user is not signed in by google signIn
-            try {
-                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        try {
+            final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if ( firebaseUser != null && firebaseUser.getUid() != null) {
-                    ValueEventListener postListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
+            if ( firebaseUser != null && firebaseUser.getUid() != null) {
+                ValueEventListener postListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    };
-                    databaseReference.addValueEventListener(postListener);
-                } else {
-                    finish();
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+                    }
+                };
+                databaseReference.addValueEventListener(postListener);
+            } else {
+                finish();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
             }
-        } else {
-            // When user is signed in by google signIn
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

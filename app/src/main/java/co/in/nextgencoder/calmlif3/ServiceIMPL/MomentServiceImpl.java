@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import co.in.nextgencoder.calmlif3.Service.MomentService;
 import co.in.nextgencoder.calmlif3.model.Moment;
+import co.in.nextgencoder.calmlif3.model.User;
 import co.in.nextgencoder.calmlif3.utils.CallBack;
 
 public class MomentServiceImpl implements MomentService {
@@ -71,13 +73,90 @@ public class MomentServiceImpl implements MomentService {
     }
 
     @Override
+    public void allVerifiedPublicMoments(@NonNull final CallBack<List<Moment>> finishedCallback) {
+        databaseReference.child("moments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Moment> searchedData = new ArrayList<Moment>();
+
+                for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    boolean isPublic = false;
+
+                    if( dataSnapshot.child("public").getValue() != null)
+                         isPublic = (boolean) dataSnapshot.child("public").getValue();
+
+                    if( isPublic) {
+                        searchedData.add( dataSnapshot.getValue(Moment.class));
+                    }
+
+                    System.out.println( "==========>"+isPublic);
+                }
+                finishedCallback.callback( searchedData);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void momentByUser(@NonNull final CallBack<List<Moment>> finishedCallback, final String mail) {
+        databaseReference.child("moments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Moment> searchedData = new ArrayList<Moment>();
+
+                for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if( mail.equals( dataSnapshot.child("user").child("mail").getValue().toString())) {
+                        Moment moment = dataSnapshot.getValue( Moment.class);
+                        searchedData.add(moment);
+                    }
+                }
+                finishedCallback.callback( searchedData);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void momentById(@NonNull final CallBack<Moment> finishedCallback, String id) {
+        databaseReference.child("moments").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                finishedCallback.callback( snapshot.getValue(Moment.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
     public void updateMoment(@NonNull CallBack<Boolean> finishedCallback,Moment moment) {
 
     }
 
     @Override
     public void deleteMoment(@NonNull CallBack<Boolean> finishedCallback,Moment moment) {
+        databaseReference.child("moments").child(moment.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().removeValue();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -94,7 +173,6 @@ public class MomentServiceImpl implements MomentService {
                                 dataSnapshot.child("title").getValue().toString(),
                                 dataSnapshot.child("mood").getValue().toString(),
                                 dataSnapshot.child("momentDescription").getValue().toString());
-
                         searchedData.add(moment);
                     }
                 }

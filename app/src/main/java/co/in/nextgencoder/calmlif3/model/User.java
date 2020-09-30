@@ -6,7 +6,6 @@ public class User {
     private String mail;
     private String picture;
     private String gender;
-    private boolean isVerified;
     private String bio;
 
     public User() {
@@ -22,12 +21,10 @@ public class User {
     public User(String name, String mail, boolean isVerified) {
         this.name = name;
         this.mail = mail;
-        this.isVerified = isVerified;
     }
 
     public User( String id, boolean isVerified, String name) {
         this.id = id;
-        this.isVerified = isVerified;
         this.name = name;
     }
 
@@ -69,14 +66,6 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
     }
 
     public String getBio() {

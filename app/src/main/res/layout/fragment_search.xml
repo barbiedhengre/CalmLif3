@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/bgColor"
     tools:context=".ui.search.SearchFragment">
 
 
@@ -18,17 +19,31 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="26sp"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:textStyle="bold"
             android:textAlignment="center"
-            android:layout_margin="10dp"
-            android:text="Search" />
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="Select what to search" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:src="@drawable/arrow_down" />
 
         <ToggleButton
             android:id="@+id/serachToggle"
             android:onClick="toggleSearch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:paddingHorizontal="50dp"
+            android:paddingVertical="0dp"
             android:layout_margin="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="#fff"
+            android:textStyle="bold"
             android:text="ToggleButton"
             android:textOff="user"
             android:textOn="moment"
@@ -41,30 +56,25 @@
             android:hint="Enter user to search"
             android:ems="10"
             android:inputType="textPersonName"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"/>
 
         <Button
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="search"
-            android:layout_marginBottom="20dp"
-            android:text="Search" />
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginBottom="30dp"
+            android:text="Search"
+            tools:ignore="OnClick" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:id="@+id/searchList">
-
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:id="@+id/searchMomentList">
 
 
         </androidx.recyclerview.widget.RecyclerView>

@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/feed_item"
     android:layout_width="match_parent"
+    android:background="@drawable/feed_border"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center_vertical"
     android:layout_height="80dp">
+
+    <ImageView
+        android:id="@+id/moodIcon"
+        android:layout_width="70dp"
+        android:layout_marginLeft="3dp"
+        android:layout_height="70dp" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="I am sad"
+        android:layout_toRightOf="@id/moodIcon"
         android:layout_margin="5dp"
         android:layout_marginBottom="0dp"
+        android:layout_marginRight="3dp"
         android:textStyle="bold"
         android:textSize="20sp" />
 
@@ -20,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/moodIcon"
         android:textStyle="bold"
         android:text="rajat patil"
         android:layout_below="@id/title"
@@ -33,6 +47,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="0dp"
         android:layout_toRightOf="@id/userName"
+        android:layout_marginRight="3dp"
         android:text="description" />
 
 </RelativeLayout>

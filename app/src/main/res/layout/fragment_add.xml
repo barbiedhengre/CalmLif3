@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgColor"
     tools:context=".ui.add.AddFragment">
 
     <LinearLayout
@@ -96,6 +97,16 @@
             android:visibility="gone"
             android:gravity="start|top"
             android:inputType="textMultiLine" />
+
+        <Switch
+            android:id="@+id/privacySwitch"
+            android:onClick="privacyAdded"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:text="@string/privateAcc"
+            android:layout_gravity="center_horizontal"
+            tools:ignore="OnClick,UseSwitchCompatOrMaterialXml" />
 
         <Button
             android:id="@+id/submitButton"

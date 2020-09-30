@@ -20,4 +20,6 @@
     <string name="title_add_heading">Add Moment</string>
     <string name="save_moment">Save Moment</string>
     <string name="enter_title_of_moment">Enter title of moment</string>
+    <string name="title_my_moments">My Moments</string>
+    <string name="privateAcc">Private</string>
 </resources>

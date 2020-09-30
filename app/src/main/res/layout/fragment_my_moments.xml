@@ -5,15 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="10dp"
-    android:background="@color/bgColor"
-    tools:context=".ui.feed.FeedFragment">
-
+    tools:context=".ui.my_moments.MyMomentsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:id="@+id/feedRecyclerView">
+        android:id="@+id/userMoments">
 
 
     </androidx.recyclerview.widget.RecyclerView>

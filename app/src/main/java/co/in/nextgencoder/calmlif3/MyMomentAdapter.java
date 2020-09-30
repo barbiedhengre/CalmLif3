@@ -12,22 +12,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import co.in.nextgencoder.calmlif3.Service.MomentService;
+import co.in.nextgencoder.calmlif3.ServiceIMPL.MomentServiceImpl;
 import co.in.nextgencoder.calmlif3.model.Moment;
-import co.in.nextgencoder.calmlif3.model.User;
+import co.in.nextgencoder.calmlif3.utils.CallBack;
 
-public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder> {
+public class MyMomentAdapter extends RecyclerView.Adapter<MyMomentAdapter.ViewHolder> {
 
     private List<Moment> moment;
+    private MomentService momentService = new MomentServiceImpl();
 
     // RecyclerView recyclerView;
-    public MomentAdapter(List<Moment> moment) {
+    public MyMomentAdapter(List<Moment> moment) {
         this.moment = moment;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.moment_search_item, parent, false);
+        View listItem= layoutInflater.inflate(R.layout.my_moment_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
         return viewHolder;
     }
@@ -58,6 +61,20 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder
             holder.moodIcon.setBackgroundResource( R.drawable.icon_angry);
         }
 
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                momentService.deleteMoment(new CallBack<Boolean>() {
+                    @Override
+                    public void callback(Boolean aBoolean) {
+                        Toast.makeText( view.getContext(), "deleted", Toast.LENGTH_SHORT).show();
+                    }
+                }, Moment);
+
+                Toast.makeText( view.getContext(), "delete item: "+Moment.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +93,7 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder
         public TextView title;
         public TextView desc;
         public TextView userName;
+        public ImageView deleteBtn;
         public ImageView moodIcon;
         public RelativeLayout relativeLayout;
         public ViewHolder(View itemView) {
@@ -83,7 +101,8 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder
             this.title = (TextView) itemView.findViewById(R.id.searchedMomentTitle);
             this.desc = (TextView) itemView.findViewById(R.id.searchedMomentDescription);
             this.moodIcon = (ImageView) itemView.findViewById(R.id.searchedMoodIcon);
-            relativeLayout = (RelativeLayout)itemView.findViewById(R.id.momentListLayout);
+            this.deleteBtn = (ImageView) itemView.findViewById(R.id.deleteMoment);
+            relativeLayout = (RelativeLayout)itemView.findViewById(R.id.myMomentLayout);
         }
     }
 }

@@ -30,8 +30,8 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="co.in.nextgencoder.calmlif3.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_my_moments"
+        android:name="co.in.nextgencoder.calmlif3.ui.my_moments.MyMomentsFragment"
+        android:label="@string/title_my_moments"
+        tools:layout="@layout/fragment_my_moments" />
 </navigation>

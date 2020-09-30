@@ -14,7 +14,15 @@ public interface UserService {
 
     public void updateUser(@NonNull CallBack<Boolean> finishedCallback, User user);
 
+    public void editUserPrivacy(@NonNull CallBack<Boolean> finishedCallback, String id, boolean privacy);
+
+    public void editUserBioById(@NonNull CallBack<Boolean> finishedCallback, String id, String bio);
+
     public void deleteUser(@NonNull CallBack<Boolean> finishedCallback, User user);
 
     public void searchUserByName(@NonNull CallBack<List<User>> finishedCallback, String name);
+
+    public void getUserById(@NonNull CallBack<User> finishedCallback, String id);
+
+    public void sendUserVerification(@NonNull CallBack<Boolean> finishedCallback);
 }

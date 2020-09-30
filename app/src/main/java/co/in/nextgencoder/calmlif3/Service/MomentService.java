@@ -12,6 +12,12 @@ public interface MomentService {
 
     public void allMoment(@NonNull CallBack<List<Moment>> finishedCallback);
 
+    public void allVerifiedPublicMoments(@NonNull CallBack<List<Moment>> finishedCallback);
+
+    public void momentByUser(@NonNull CallBack<List<Moment>> finishedCallback, String mail);
+
+    public void momentById(@NonNull CallBack<Moment> finishedCallback, String id);
+
     public void updateMoment(@NonNull CallBack<Boolean> finishedCallback, Moment moment);
 
     public void deleteMoment(@NonNull CallBack<Boolean> finishedCallback, Moment moment);

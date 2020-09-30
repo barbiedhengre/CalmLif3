@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,7 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+import co.in.nextgencoder.calmlif3.Service.UserService;
+import co.in.nextgencoder.calmlif3.ServiceIMPL.UserServiceImpl;
 import co.in.nextgencoder.calmlif3.model.User;
+import co.in.nextgencoder.calmlif3.utils.CallBack;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -36,22 +40,32 @@ public class RegisterActivity extends AppCompatActivity {
 
     EditText nameInput, mailInput, passwordInput;
 
-    FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
+    UserService userService = new UserServiceImpl();
 
-    GoogleSignInClient googleSignInClient;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private GoogleSignInClient googleSignInClient;
+
+    // TextView logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        initializeInputFields();
+        configureAuthentication();
+        configureDatabase();
+    }
 
+    private void initializeInputFields() {
         nameInput = findViewById( R.id.inputName);
         mailInput = findViewById( R.id.inputMail);
         passwordInput = findViewById( R.id.inputPassword);
+    }
+
+    private void configureAuthentication() {
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -64,52 +78,76 @@ public class RegisterActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    public void registerUser(View view) {
-        boolean isFormValid = false;
-        String alertToGive = "";
+    private void configureDatabase() {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+    }
 
-        String nameValidationRegex = "^[a-zA-Z]*$";
-        String emailValidationRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
+    private String validateInputs() {
+        // Taking inputs
         final String userName = nameInput.getText().toString().trim();
         final String userMail = mailInput.getText().toString().trim();
         final String userPass = passwordInput.getText().toString().trim();
 
+        // Regular expressions to validate name
+        final String nameValidationRegex = "^[a-zA-Z]*$";
+
+        // Regular expressions to validate E-mail
+        final String emailValidationRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+
+
         if( userName.isEmpty() || userMail.isEmpty() || userPass.isEmpty()) {
-            alertToGive = "All fields are manadatory";
-        } else {
-            if ( userName.matches(nameValidationRegex)) {
-                if (userMail.matches(emailValidationRegex)) {
-                    if (userPass.length() < 8) {
-                        alertToGive = "Password length should be greater than or equal to 8";
-                    } else {
-                        isFormValid = true;
-                    }
-                } else {
-                    alertToGive = "Invalid email address";
-                }
-            } else {
-                alertToGive = "Name must only contain alphabets";
-            }
+            return "All fields are manadatory";
         }
 
+        if ( userName.matches(nameValidationRegex)) {
+            return "Name must only contain alphabets";
+        }
 
-        if(isFormValid) {
+        if (userMail.matches(emailValidationRegex)) {
+            return "Invalid email address";
+        }
+
+        if (userPass.length() < 8) {
+            return "Password length should be greater than or equal to 8";
+        }
+
+        return "Form is validated";
+    }
+
+    public void registerUser(View view) {
+        final String userName = nameInput.getText().toString().trim();
+        final String userMail = mailInput.getText().toString().trim();
+        final String userPass = passwordInput.getText().toString().trim();
+
+        String result = validateInputs();
+
+        if( result.equals("Form is validated")) {
             firebaseAuth.createUserWithEmailAndPassword( userMail, userPass)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete( Task<AuthResult> task) {
+
                             if(task.isSuccessful()) {
                                 User user = new User( userName, userMail);
-                                databaseReference.child( firebaseAuth.getCurrentUser().getUid()).setValue(user);
+                                user.setId( task.getResult().getUser().getUid());
 
-                                Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                                userService.addUser(new CallBack<Boolean>() {
+                                    @Override
+                                    public void callback(Boolean isUserRegistered) {
+                                        if( isUserRegistered) {
+                                            Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent( getApplicationContext(), MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                            Intent intent = new Intent( getApplicationContext(), MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }, user);
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                             }
-                            else Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(this, new OnFailureListener() {
@@ -119,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         } else {
-                Toast.makeText(this, alertToGive, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -146,21 +184,23 @@ public class RegisterActivity extends AppCompatActivity {
 
                 final String userName = account.getDisplayName();
                 final String userMail = account.getEmail();
-                final String userId = account.getId();
 
                 firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    User user = new User( userName, userMail, true);
-                                    databaseReference.child( userId).setValue(user);
+                                    User user = new User( userName, userMail);
+                                    userService.addUser(new CallBack<Boolean>() {
+                                        @Override
+                                        public void callback(Boolean isUserRegistered) {
+                                            Toast.makeText(RegisterActivity.this, "SignIn Successfull", Toast.LENGTH_SHORT).show();
 
-                                    Toast.makeText(RegisterActivity.this, "Login Successfull", Toast.LENGTH_SHORT).show();
-
-                                    Intent intent = new Intent( getApplicationContext(), MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                                            Intent intent = new Intent( getApplicationContext(), MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        }
+                                    }, user);
                                 } else {
                                     Toast.makeText(RegisterActivity.this,"Sign In Failed", Toast.LENGTH_SHORT).show();
                                 }

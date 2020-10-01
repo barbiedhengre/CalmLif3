@@ -46,8 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private GoogleSignInClient googleSignInClient;
 
-    // TextView logoutBtn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,44 +80,11 @@ public class RegisterActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
     }
 
-    private String validateInputs() {
-        // Taking inputs
-        final String userName = nameInput.getText().toString().trim();
-        final String userMail = mailInput.getText().toString().trim();
-        final String userPass = passwordInput.getText().toString().trim();
-
-        // Regular expressions to validate name
-        final String nameValidationRegex = "^[a-zA-Z]*$";
-
-        // Regular expressions to validate E-mail
-        final String emailValidationRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
-
-
-        if( userName.isEmpty() || userMail.isEmpty() || userPass.isEmpty()) {
-            return "All fields are manadatory";
-        }
-
-        if ( userName.matches(nameValidationRegex)) {
-            return "Name must only contain alphabets";
-        }
-
-        if (userMail.matches(emailValidationRegex)) {
-            return "Invalid email address";
-        }
-
-        if (userPass.length() < 8) {
-            return "Password length should be greater than or equal to 8";
-        }
-
-        return "Form is validated";
-    }
-
     public void registerUser(View view) {
+        String result = validateInputs();
         final String userName = nameInput.getText().toString().trim();
         final String userMail = mailInput.getText().toString().trim();
         final String userPass = passwordInput.getText().toString().trim();
-
-        String result = validateInputs();
 
         if( result.equals("Form is validated")) {
             firebaseAuth.createUserWithEmailAndPassword( userMail, userPass)
@@ -157,20 +122,56 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         } else {
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         }
     }
 
+    private String validateInputs() {
+        // Taking inputs
+        final String userName = nameInput.getText().toString().trim();
+        final String userMail = mailInput.getText().toString().trim();
+        final String userPass = passwordInput.getText().toString().trim();
+
+        // Regular expressions to validate name
+        final String nameValidationRegex = "^[a-zA-Z]*$";
+
+        // Regular expressions to validate E-mail
+        final String emailValidationRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+
+
+        if( userName.isEmpty() || userMail.isEmpty() || userPass.isEmpty()) {
+            return "All fields are manadatory";
+        }
+
+        if ( userName.matches(nameValidationRegex)) {
+            return "Name must only contain alphabets";
+        }
+
+        if (userMail.matches(emailValidationRegex)) {
+            return "Invalid email address";
+        }
+
+        if (userPass.length() < 8) {
+            return "Password length should be greater than or equal to 8";
+        }
+
+        return "Form is validated";
+    }
+
+    // Starts Login Activity
     public void goToLogin(View view) {
         Intent intent = new Intent( this, LoginActivity.class);
         startActivity(intent);
     }
 
+    // Sending Google Sign In Intent
     public void googleSignIn(View view) {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+
+    // Google Sign In Results
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -191,10 +192,11 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     User user = new User( userName, userMail);
+                                    user.setId( task.getResult().getUser().getUid());
                                     userService.addUser(new CallBack<Boolean>() {
                                         @Override
                                         public void callback(Boolean isUserRegistered) {
-                                            Toast.makeText(RegisterActivity.this, "SignIn Successfull", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RegisterActivity.this, "SignIn Successful", Toast.LENGTH_SHORT).show();
 
                                             Intent intent = new Intent( getApplicationContext(), MainActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

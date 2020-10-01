@@ -1,10 +1,6 @@
 package co.in.nextgencoder.calmlif3.ServiceIMPL;
 
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -13,7 +9,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -21,7 +16,6 @@ import java.util.List;
 
 import co.in.nextgencoder.calmlif3.Service.MomentService;
 import co.in.nextgencoder.calmlif3.model.Moment;
-import co.in.nextgencoder.calmlif3.model.User;
 import co.in.nextgencoder.calmlif3.utils.CallBack;
 
 public class MomentServiceImpl implements MomentService {
@@ -88,8 +82,35 @@ public class MomentServiceImpl implements MomentService {
                     if( isPublic) {
                         searchedData.add( dataSnapshot.getValue(Moment.class));
                     }
+                }
+                finishedCallback.callback( searchedData);
+            }
 
-                    System.out.println( "==========>"+isPublic);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void publicMomentsByUserMail(@NonNull final CallBack<List<Moment>> finishedCallback, final String mail) {
+        databaseReference.child("moments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Moment> searchedData = new ArrayList<Moment>();
+
+                for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if( mail.equals( dataSnapshot.child("user").child("mail").getValue().toString())) {
+                        boolean isPublic = false;
+
+                        if( dataSnapshot.child("public").getValue() != null)
+                            isPublic = (boolean) dataSnapshot.child("public").getValue();
+
+                        if( isPublic) {
+                            searchedData.add( dataSnapshot.getValue(Moment.class));
+                        }
+                    }
                 }
                 finishedCallback.callback( searchedData);
             }
@@ -169,11 +190,8 @@ public class MomentServiceImpl implements MomentService {
                 for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String dbTitle = dataSnapshot.child("title").getValue().toString();
                     if( dbTitle.toLowerCase().contains(title.toLowerCase())) {
-                        Moment moment = new Moment( dataSnapshot.getKey(),
-                                dataSnapshot.child("title").getValue().toString(),
-                                dataSnapshot.child("mood").getValue().toString(),
-                                dataSnapshot.child("momentDescription").getValue().toString());
-                        searchedData.add(moment);
+                        if( (boolean) dataSnapshot.child("public").getValue())
+                            searchedData.add( dataSnapshot.getValue( Moment.class));
                     }
                 }
                 finishedCallback.callback( searchedData);

@@ -22,4 +22,5 @@
     <string name="enter_title_of_moment">Enter title of moment</string>
     <string name="title_my_moments">My Moments</string>
     <string name="privateAcc">Private</string>
+    <string name="currentMood">What\'s your mood now</string>
 </resources>

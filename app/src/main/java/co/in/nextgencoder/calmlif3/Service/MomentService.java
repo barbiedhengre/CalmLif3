@@ -14,6 +14,8 @@ public interface MomentService {
 
     public void allVerifiedPublicMoments(@NonNull CallBack<List<Moment>> finishedCallback);
 
+    public void publicMomentsByUserMail(@NonNull CallBack<List<Moment>> finishedCallback, String mail);
+
     public void momentByUser(@NonNull CallBack<List<Moment>> finishedCallback, String mail);
 
     public void momentById(@NonNull CallBack<Moment> finishedCallback, String id);

@@ -1,5 +1,6 @@
 package co.in.nextgencoder.calmlif3;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder
         return viewHolder;
     }
 
-    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+    @Override public void onBindViewHolder(final ViewHolder holder, int position) {
         final Moment Moment = moment.get(position);
         holder.title.setText( moment.get(position).getTitle());
         holder.desc.setText( moment.get(position).getMomentDescription());
@@ -61,7 +62,9 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.ViewHolder
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+Moment.getTitle(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent( view.getContext(), ViewMomentActivity.class);
+                intent.putExtra("momentId", Moment.getId());
+                view.getContext().startActivity( intent);
             }
         });
     }

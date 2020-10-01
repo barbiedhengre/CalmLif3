@@ -2,7 +2,9 @@ package co.in.nextgencoder.calmlif3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,13 +34,11 @@ public class ViewMomentActivity extends AppCompatActivity {
         userName = findViewById( R.id.momentViewUserName);
         moodDescription = findViewById( R.id.momentViewDescription);
 
-        //Bundle extras = getIntent().getExtras();
-
         String id = getIntent().getStringExtra("momentId");
 
         momentService.momentById(new CallBack<Moment>() {
             @Override
-            public void callback(Moment moment) {
+            public void callback(final Moment moment) {
                 if( moment.getMood().equals("happy")) {
                     mood.setBackgroundResource( R.drawable.icon_happy);
                 }
@@ -63,6 +63,15 @@ public class ViewMomentActivity extends AppCompatActivity {
                 moodTitle.setText( moment.getTitle());
                 moodDescription.setText( moment.getMomentDescription());
                 userName.setText( moment.getUser().getName());
+
+                userName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent( view.getContext(), ViewUserActivity.class);
+                        intent.putExtra("userId", moment.getUser().getId());
+                        view.getContext().startActivity( intent);
+                    }
+                });
             }
         }, id);
     }

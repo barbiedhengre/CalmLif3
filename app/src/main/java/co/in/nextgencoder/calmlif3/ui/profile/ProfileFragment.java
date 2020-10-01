@@ -1,16 +1,9 @@
 package co.in.nextgencoder.calmlif3.ui.profile;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -35,8 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 import co.in.nextgencoder.calmlif3.R;
 import co.in.nextgencoder.calmlif3.ServiceIMPL.UserServiceImpl;
@@ -109,7 +100,7 @@ public class ProfileFragment extends Fragment {
         // When user is not signed in by google signIn
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        id = ( account != null) ? account.getId() : firebaseUser.getUid();
+        id = firebaseAuth.getUid();
 
         final DatabaseReference picReference = databaseReference.child( id).child("pic").getRef();
 
@@ -195,6 +186,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onStart() {
+        System.out.println("Id ===== "+id);
         super.onStart();
 
         userService.getUserById(new CallBack<User>() {

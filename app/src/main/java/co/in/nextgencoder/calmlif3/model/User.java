@@ -4,7 +4,7 @@ public class User {
     private String id;
     private String name;
     private String mail;
-    private String picture;
+    private String pic;
     private String gender;
     private String bio;
 
@@ -52,12 +52,12 @@ public class User {
         this.mail = mail;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPic() {
+        return pic;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public String getGender() {

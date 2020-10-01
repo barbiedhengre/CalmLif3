@@ -180,9 +180,9 @@ public class HomeActivity extends AppCompatActivity {
             GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount( this);
 
             try {
-                final StorageReference imageReference = storageReference.child( "images/"+googleSignInAccount.getId()+"/profilePic");
+                final StorageReference imageReference = storageReference.child( "images/"+firebaseAuth.getUid()+"/profilePic");
                 InputStream iStream =   getContentResolver().openInputStream(fileUri);
-                final DatabaseReference picReference = databaseReference.child("users").child( googleSignInAccount.getId()).child("pic");
+                final DatabaseReference picReference = databaseReference.child("users").child( firebaseAuth.getUid()).child("pic");
 
                 UploadTask uploadTask = imageReference.putStream(iStream);
 
@@ -229,7 +229,7 @@ public class HomeActivity extends AppCompatActivity {
         String momentDescription = momentDesc.getText().toString();
         String momentHeading = momentTitle.getText().toString();
 
-        Switch aSwitch = (Switch) view;
+        Switch aSwitch = (Switch) findViewById( R.id.privacySwitch);
         boolean isPublic = !aSwitch.isChecked();
         moment.setPublic( isPublic);
 
@@ -285,7 +285,9 @@ public class HomeActivity extends AppCompatActivity {
                     if ( searchedData != null && !searchedData.isEmpty()) {
                         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.searchList);
                         UserAdapter adapter = new UserAdapter(searchedData);
-                        recyclerView.setHasFixedSize(true);
+                        try {
+                            recyclerView.setHasFixedSize(true);
+                        } catch (Exception e) {}
                         recyclerView.setLayoutManager(new StaggeredGridLayoutManager( 2, RecyclerView.VERTICAL));
                         recyclerView.setAdapter(adapter);
                     } else {
@@ -307,8 +309,8 @@ public class HomeActivity extends AppCompatActivity {
                         MomentAdapter adapter = new MomentAdapter(searchedData);
                         try {
                             recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new StaggeredGridLayoutManager( 2, RecyclerView.VERTICAL));
                         } catch (Exception e) {}
-                        recyclerView.setLayoutManager(new StaggeredGridLayoutManager( 2, RecyclerView.VERTICAL));
                         recyclerView.setAdapter(adapter);
 
                     } else {

@@ -71,14 +71,14 @@ public class MyMomentAdapter extends RecyclerView.Adapter<MyMomentAdapter.ViewHo
                     }
                 }, Moment);
 
-                Toast.makeText( view.getContext(), "delete item: "+Moment.getTitle(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText( view.getContext(), "delete item: "+Moment.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+Moment.getTitle(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(view.getContext(),"click on item: "+Moment.getTitle(),Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -5,7 +5,7 @@ public class Moment {
     private String title;
     private String mood;
     private String momentDescription;
-    private String imageUrl;
+    private String imageUrl;    // Feature yet to be added
     private boolean isPublic;
     private User user;
 

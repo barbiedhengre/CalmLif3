@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(@NonNull final CallBack<Boolean> finishedCallback, User user) {
-        databaseReference.child("users").child(user.getId()).setValue(user)
+        databaseReference.child("users").child(firebaseAuth.getUid()).setValue(user)
             .addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -125,10 +125,7 @@ public class UserServiceImpl implements UserService {
 
                 for ( DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child("name").getValue().toString().toLowerCase().contains( name.toLowerCase())) {
-                        User user = new User( dataSnapshot.getKey(),
-                                (boolean) dataSnapshot.child("verified").getValue(),
-                                dataSnapshot.child("name").getValue().toString());
-                        searchedData.add(user);
+                        searchedData.add( dataSnapshot.getValue(User.class));
                     }
                 }
                 finishedCallback.callback( searchedData);
@@ -142,10 +139,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void getUserById(@NonNull final CallBack<User> finishedCallback, String id) {
-        databaseReference.child("users").child(id).addValueEventListener(new ValueEventListener() {
+    public void getUserById(@NonNull final CallBack<User> finishedCallback, final String id) {
+        databaseReference.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println("id ======> "+id);
                 User user = snapshot.getValue( User.class);
                 finishedCallback.callback(user);
             }

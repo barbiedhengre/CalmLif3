@@ -1,5 +1,6 @@
 package co.in.nextgencoder.calmlif3;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,14 +39,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         final User User = user.get(position);
         holder.listName.setText(user.get(position).getName());
 
-        if( user.get(position).getPicture() == null || user.get(position).getPicture().isEmpty()) {
+        if( user.get(position).getPic() == null || user.get(position).getPic().isEmpty()) {
             holder.userPic
                     .setBackgroundResource( R.drawable.icon_user_anonymous);
+        } else {
+            Picasso.get()
+                    .load( User.getPic())
+                    .placeholder( R.drawable.icon_user_anonymous)
+                    .into( holder.userPic);
         }
 
         holder.bio.setText(
                 ( user.get(position).getBio() == null || user.get(position).getBio().isEmpty()) ?
                 "Hello I am new on Calm Lif3" : user.get(position).getBio());
+
 
 //        holder.gender.setText(
 //                ( user.get(position).getGender() == null || user.get(position).getGender().isEmpty()) ?
@@ -55,7 +64,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+User.getName(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent( view.getContext(), ViewUserActivity.class);
+                intent.putExtra("userId", User.getId());
+                view.getContext().startActivity( intent);
             }
         });
     }

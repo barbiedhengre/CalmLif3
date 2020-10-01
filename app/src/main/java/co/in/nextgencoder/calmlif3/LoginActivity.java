@@ -64,27 +64,33 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    public void loginUser(View view) {
-        boolean isFormValid = false;
-        String alertToGive = "";
+    private String validateInputs() {
+        // Taking inputs
+        final String userMail = mailInput.getText().toString().trim();
+        final String userPass = passwordInput.getText().toString().trim();
 
-        String emailValidationRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        // Regular expressions to validate E-mail
+        final String emailValidationRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
 
-        if( mailInput.getText().toString().isEmpty() || passwordInput.getText().toString().isEmpty()) {
-            alertToGive = "All fields are manadatory";
-        } else {
-            if ( mailInput.getText().toString().trim().matches(emailValidationRegex)) {
-                if( passwordInput.getText().toString().trim().length() < 8) {
-                    alertToGive = "Password length should be greater than or equal to 8";
-                } else {
-                    isFormValid = true;
-                }
-            } else {
-                alertToGive = "Invalid email address";
-            }
+        if( userMail.isEmpty() || userPass.isEmpty()) {
+            return "All fields are mandatory";
         }
 
-        if(isFormValid) {
+        if (userMail.matches(emailValidationRegex)) {
+            return "Invalid email address";
+        }
+
+        if (userPass.length() < 8) {
+            return "Password length should be greater than or equal to 8";
+        }
+
+        return "Form is validated";
+    }
+
+    public void loginUser(View view) {
+        String result = validateInputs();
+
+        if( result.equals("Form is validated")) {
             String userMail = mailInput.getText().toString().trim();
             String userPassword = passwordInput.getText().toString().trim();
 
@@ -109,20 +115,23 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, alertToGive, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         }
     }
 
+    // Starting Register Activity
     public void goToRegister(View view) {
         Intent intent = new Intent( this, RegisterActivity.class);
         startActivity(intent);
     }
 
+    // Sending Google Sign In Intent
     public void googleSignIn(View view) {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    // Google Sign In Results
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -143,10 +152,11 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     User user = new User( userName, userMail);
+                                    user.setId( task.getResult().getUser().getUid());
                                     userService.addUser(new CallBack<Boolean>() {
                                         @Override
                                         public void callback(Boolean isUserRegistered) {
-                                            Toast.makeText(LoginActivity.this, "SignIn Successfull", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(LoginActivity.this, "SignIn Successful", Toast.LENGTH_SHORT).show();
 
                                             Intent intent = new Intent( getApplicationContext(), MainActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
